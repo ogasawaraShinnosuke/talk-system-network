@@ -8,3 +8,7 @@
  
 ### response
 * get requestに指定されてない正規表現が来るとレスポンスはなし(error処理書いてない)
+
+### develop
+* 実装済み：ランダムレスポンス
+* 未実装：siritoriレスポンス
