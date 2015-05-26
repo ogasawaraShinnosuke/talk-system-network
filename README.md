@@ -15,7 +15,7 @@
 
 ### process kill
 errorが発生しない限り延々とメモリを食い続けますので、以下コマンド使って切って下さい
-```
+```.sh
 ps -ef | grep java | grep talk-system 
 kill -9 PID番号いれてもらう
 ```
