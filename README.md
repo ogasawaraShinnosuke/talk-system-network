@@ -12,3 +12,10 @@
 ### develop
 * 実装済み：ランダムレスポンス
 * 未実装：siritoriレスポンス
+
+### process kill
+errorが発生しない限り延々とメモリを食い続けますので、以下コマンド使って切って下さい
+```
+ps -ef | grep java | grep talk-system 
+kill -9 PID番号いれてもらう
+```
