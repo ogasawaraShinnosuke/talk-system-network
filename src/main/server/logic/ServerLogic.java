@@ -37,7 +37,6 @@ public class ServerLogic {
      * @throws IOException
      */
     protected void run(String _port) throws IOException {
-        Socket socket = null;
         try {
             _serverSocket = new ServerSocket(parseInt(_port));
 
