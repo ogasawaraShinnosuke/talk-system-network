@@ -5,8 +5,7 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketException;
 import java.net.URLDecoder;
-import java.util.Random;
-import java.util.StringTokenizer;
+import java.util.*;
 import java.util.regex.Pattern;
 import java.util.regex.Matcher;
 
@@ -21,7 +20,8 @@ public class ServerLogic {
     private BufferedReader _br = null;
 
     private static final String FORMAT_REGEX = "(/shiritori\\?keyword=)(.+)(&mode=)(.+)";
-    private static final int OUTPUT_COLUMN = 1;
+    private static final int ELEMENT_INITIAL = 0;
+    private static final int ELEMENT_WORD = 1;
 
     private enum Mode {
         ANIME("anime"),SHUZO("shuzo"),LYLICS("lylics");
@@ -79,6 +79,8 @@ public class ServerLogic {
             _br = new BufferedReader(new FileReader("/Users/shn/workspace/java/talk-system/src/main/resource/shuzo.csv"));
         } else if (Mode.LYLICS.mode.equals(mode)) {
             _br = new BufferedReader(new FileReader("/Users/shn/workspace/java/talk-system/src/main/resource/lylics.csv"));
+        } else {
+            _br = new BufferedReader(new FileReader("/Users/shn/workspace/java/talk-system/src/main/resource/other.csv"));
         }
     }
 
@@ -89,21 +91,30 @@ public class ServerLogic {
      */
     private void outputWord(String targetWord) throws IOException {
         String read = null;
-        StringTokenizer token;
-        int rand = new Random().nextInt(10);
+        List<String> list = new ArrayList<String>();
+        while ((read = _br.readLine()) != null)
+            list.add(read);
+        Collections.shuffle(list);
+
+        Csv csv = new Csv();
         int i = 0;
-        while ((read = _br.readLine()) != null) {
-            if (rand == i) {
-                token = new StringTokenizer(read, ",");
-                int j = 0;
-                while (token.hasMoreTokens()) {
-                    String column = token.nextToken();
-                    if (j == OUTPUT_COLUMN)
-                        output(column);
-                    j++;
-                }
+        for (String random : list.get(0).split(",")) {
+            if (i == ELEMENT_INITIAL) {
+                csv.initial = random;
+            } else if (i == ELEMENT_WORD) {
+                csv.word = random;
             }
             i++;
+        }
+        output(csv.toJson());
+    }
+
+    private class Csv {
+        private static final String JSON = "{\"initial\":\"%s\",\"word\":\"%s\"}";
+        private String initial = "";
+        private String word = "";
+        private String toJson() {
+            return String.format(JSON, initial, word);
         }
     }
 
