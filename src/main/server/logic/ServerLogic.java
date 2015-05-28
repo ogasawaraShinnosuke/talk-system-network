@@ -44,6 +44,7 @@ public class ServerLogic {
                 init();
 
                 String line = _reader.readLine();
+                System.out.println(line);
                 if (line != null && !"".equals(line)) {
                     String requestPath = URLDecoder.decode(line.split(" ")[1], "UTF-8");
                     Matcher m = Pattern.compile(FORMAT_REGEX).matcher(requestPath);
@@ -143,6 +144,13 @@ public class ServerLogic {
      */
     private void output(String message) {
         System.out.println(message);
+        _writer.println("HTTP/1.1 200 OK");
+        _writer.println(String.format("Content-Length: %s", message.length()));
+        _writer.println("Content-Type: application/json");
+        _writer.println("Access-Control-Allow-Origin: *");
+        _writer.println("Access-Control-Allow-Headers: Content-Type");
+        _writer.println("Access-Control-Allow-Methods: PUT,DELETE,POST,GET,OPTIONS");
+        _writer.println();
         _writer.println(message);
         _writer.flush();
     }
